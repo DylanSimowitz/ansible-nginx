@@ -9,6 +9,7 @@ nginx_pid_file: /run/nginx.pid
 nginx_prefix: /usr/local
 nginx_bin: "{{ nginx_prefix }}/sbin/nginx"
 
+nginx_module_dependencies: []
 nginx_build_options:
   with-http_gzip_static_module:
   with-http_realip_module:
