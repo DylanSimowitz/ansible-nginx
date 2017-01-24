@@ -21,3 +21,4 @@ nginx_user: www-data
 nginx_version: 1.10.1
 nginx_worker_processes: 2
 nginx_pagespeed_enabled: false
+nginx_pagespeed_cache_path: /var/cache/pagespeed
