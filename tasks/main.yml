@@ -144,8 +144,4 @@
 
 - name: Mount pagespeed cache directory as tmpfs
   become: yes
-  mount:
-    path: {{ nginx_pagespeed_cache_path }}
-    fstype: tmpfs
-    opts: rw,nosuid,nodev  
-    state: mounted
+  mount: name={{ nginx_pagespeed_cache_path }} src='tmpfs' fstype=tmpfs opts='rw,nosuid,nodev' state=mounted
