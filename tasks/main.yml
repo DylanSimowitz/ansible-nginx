@@ -10,17 +10,15 @@
     - libpcre3
     - libpcre3-dev
     - unzip
-    {{ nginx_module_dependencies }}
+    - "{{ nginx_module_dependencies }}"
 
 - name: Uninstall nginx if installed
   become: yes
-  apt: name={{ item }}
+  apt: name={{ item }} state=absent dpkg_options=force-depends
   with_items:
     - nginx
     - nginx-common
     - nginx-full
-  dpkg_options: "force-depends"
-  state: absent
 
 - name: create build path
   become: yes
