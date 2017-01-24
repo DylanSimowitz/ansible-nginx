@@ -137,3 +137,15 @@
   become: yes
   file: state=directory
         path=/etc/nginx/sites-enabled
+
+- name: Create pagespeed cache directory
+  become: yes
+  file: path={{ nginx_pagespeed_cache_path }}
+
+- name: Mount pagespeed cache directory as tmpfs
+  become: yes
+  mount:
+    path: {{ nginx_pagespeed_cache_path }}
+    fstype: tmpfs
+    opts: rw,nosuid,nodev  
+    state: mounted
