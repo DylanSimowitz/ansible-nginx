@@ -140,7 +140,8 @@
 
 - name: Create pagespeed cache directory
   become: yes
-  file: path={{ nginx_pagespeed_cache_path }}
+  file: state=directory
+        path={{ nginx_pagespeed_cache_path }}
 
 - name: Mount pagespeed cache directory as tmpfs
   become: yes
