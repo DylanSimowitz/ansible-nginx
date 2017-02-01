@@ -20,9 +20,7 @@ PIDFile={{ nginx_pid_file }}
 ExecStartPre={{ nginx_bin }} -t -q -g 'daemon on; master_process on;'
 ExecStart={{ nginx_bin }} -g 'daemon on; master_process on;'
 ExecReload={{ nginx_bin }} -g 'daemon on; master_process on;' -s reload
-ExecStop=-/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile {{ nginx_pid_file }}
-TimeoutStopSec=5
-KillMode=mixed
+ExecStop={{ nginx_bin }} -g 'pid {{ nginx_pid_file }};'-s quit
 
 [Install]
 WantedBy=multi-user.target
