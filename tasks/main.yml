@@ -10,15 +10,8 @@
     - libpcre3
     - libpcre3-dev
     - unzip
+    - checkinstall
     - "{{ nginx_module_dependencies }}"
-
-- name: Uninstall nginx if installed
-  become: yes
-  apt: name={{ item }} state=absent dpkg_options=force-depends
-  with_items:
-    - nginx
-    - nginx-common
-    - nginx-full
 
 - name: create build path
   become: yes
@@ -86,7 +79,7 @@
   register: nginx_source_unpack
 
 - name: Configure Nginx source
-  command: ./configure {{ nginx_build_options_defaults|combine(nginx_build_options)|dict2opts }} --add-module={{ nginx_build_dir }}/ngx_pagespeed-release-{{ nginx_pagespeed_version }}-beta --with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro'
+  command: ./configure {{ nginx_build_options_defaults|combine(nginx_build_options)|dict2opts }} --sbin-path={{ nginx_bin }} --add-module={{ nginx_build_dir }}/ngx_pagespeed-release-{{ nginx_pagespeed_version }}-beta --with-cc-opt='-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro'
            chdir={{ nginx_build_dir }}/nginx-{{ nginx_version }}
   when: nginx_pagespeed_enabled and
         (nginx_pagespeed_module_unpack|changed or
@@ -103,7 +96,7 @@
 
 - name: Install Nginx
   become: yes
-  shell: make && make install
+  shell: make && checkinstall --install make install
          chdir={{ nginx_build_dir }}/nginx-{{ nginx_version }}
   when: nginx_configure|changed or nginx_configure_pagespeed|changed
   notify:
@@ -137,6 +130,11 @@
   become: yes
   file: state=directory
         path=/etc/nginx/sites-enabled
+
+- name: Create conf.d
+  become: yes
+  file: state=directory
+        path=/etc/nginx/conf.d
 
 - name: Create pagespeed cache directory
   become: yes
