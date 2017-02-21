@@ -96,7 +96,7 @@
 
 - name: Install Nginx
   become: yes
-  shell: make && checkinstall --provides nginx --install make install
+  shell: checkinstall -D make install
          chdir={{ nginx_build_dir }}/nginx-{{ nginx_version }}
   when: nginx_configure|changed or nginx_configure_pagespeed|changed
   notify:
